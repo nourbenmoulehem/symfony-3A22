@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-  <title>Update todo</title>
-</head>
-<body>
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Modifier une tache{% endblock %}
+
+{% block content %}
   <h1 >Modifier une tache</h1>
   <form action="{{ path('todo_update', { 'name': name, 'content': content }) }}" method="post" >
     <input type="hidden" name="old_name" value="{{ name }}">
@@ -34,7 +31,6 @@
     </div>
   {% endfor %}
 
-  <a href="{{ path('todo') }}" class="btn btn-info">Retour ◀️</a>
+  <a href="{{ path('todo') }}" class="btn btn-secondary">Retour ◀️  </a>
 
-</body>
-</html>
+{% endblock %}

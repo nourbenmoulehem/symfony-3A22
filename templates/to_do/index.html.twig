@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-    <title>To-do list</title>
-</head> 
-<body>
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des taches{% endblock %}
+
+
+{% block content %}
     <h1>Liste des taches à faire!!</h1>
     <a href="{{ path('todo_add') }}" class="btn btn-light">➕ Ajouter une tache</a>
     <ol class="list-group">
@@ -37,5 +34,4 @@
         </div>
     {% endfor %}
     
-</body>
-</html>
+{% endblock %}
