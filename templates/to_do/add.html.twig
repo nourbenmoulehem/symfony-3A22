@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
+  <title>Ajouter une tache</title>
+</head>
+<body>
+  <h1 >Ajouter une tache</h1>
+  <form action="{{ path('todo_add') }}" method="post" >
+    <input type="text" name="name" >
+    <input type="text" name="content" >
+    <button type="submit" class="btn btn-primary">Modifier</button>
+  </form>
+
+  {% for message in app.session.flashBag.get('success') %}
+    <div class="alert alert-success" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+
+
+  {% for message in app.session.flashBag.get('info') %}
+    <div class="alert alert-info" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+
+  {% for message in app.session.flashBag.get('error') %}
+    <div class="alert alert-danger" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+
+  <a href="{{ path('todo') }}" class="btn btn-info">Retour ◀️</a>
+</body>
+</html>

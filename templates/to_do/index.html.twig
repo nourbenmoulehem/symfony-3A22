@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
+    <title>To-do list</title>
+</head> 
+<body>
+    <h1>Liste des taches à faire!!</h1>
+    <a href="{{ path('todo_add') }}" class="btn btn-light">➕ Ajouter une tache</a>
+    <ol class="list-group">
+        {% for name, content in app.session.get('todos') %}
+            <li class="list-group-item">
+                {{ name }} : {{ content }}
+                <a href="{{ path('todo_update', { 'name': name, 'content': content }) }}" class="btn btn-secondary">Modifier</a>
+                <a href="{{ path('todo_delete', { 'name': name, 'content': content }) }}" class="btn btn-danger">Supprimer</a>
+            </li>
+        {% endfor %}
+    </ol>
+    <a href="{{ path('todo_reset') }}" class="btn btn-primary">Reset ⛷️</a>
+    {% for message in app.session.flashBag.get('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.session.flashBag.get('info') %}
+        <div class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.session.flashBag.get('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    
+</body>
+</html>
