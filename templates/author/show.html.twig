@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Des Autheurs{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="mb-4">Liste Des Autheurs</h1>
+    <div class="row">
+      {% for author in authors %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <img src="{{ asset(author.picture) }}" class="card-img-top" alt="Author Picture">
+            <div class="card-body">
+              <h5 class="card-title">{{ author.username }}</h5>
+              <p class="card-text"><strong>Email:</strong> {{ author.email }}</p>
+              <p class="card-text"><strong>Number of Books:</strong> {{ author.nb_books }}</p>
+              <a href="{{ path("app_showDetail",{'id':author.id}) }}">show_Details</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
