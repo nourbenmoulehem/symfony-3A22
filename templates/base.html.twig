@@ -10,8 +10,12 @@
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
+        <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% include 'components/nav.html.twig' %}
+        <div class="container mt-5">
+            {% block content %}{% endblock %}
+        </div>
     </body>
 </html>
