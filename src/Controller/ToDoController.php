@@ -7,11 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/todo')]
 class ToDoController extends AbstractController
 {
     // afficher le tableau
     
-    #[Route('/todo', name: 'todo')]
+    #[Route('', name: 'todo')]
     public function index(Request $request): Response
     {
         $session = $request->getSession();
@@ -32,7 +33,7 @@ class ToDoController extends AbstractController
         return $this->render('to_do/index.html.twig');
     }
 
-    #[Route('/todo/add', name: 'todo_add')]
+    #[Route('/add', name: 'todo_add')]
     public function addToDo(Request $request): Response
     {
         if ($request->isMethod('Post')) {
@@ -51,7 +52,7 @@ class ToDoController extends AbstractController
         return $this->render('to_do/add.html.twig');
     }
 
-    #[Route('/todo/update/{name}/{content}', name: 'todo_update')]
+    #[Route('/update/{name}/{content}', name: 'todo_update')]
     public function updateToDo(Request $request, $name, $content): Response{
 
         $session = $request->getSession();
@@ -87,7 +88,7 @@ class ToDoController extends AbstractController
     }
 
 
-    #[Route('/todo/delete/{name}/{content}', name: 'todo_delete')]
+    #[Route('/delete/{name}/{content}', name: 'todo_delete')]
     public function deleteToDo(Request $request, $name, $content): Response{
 
         $session = $request->getSession();
