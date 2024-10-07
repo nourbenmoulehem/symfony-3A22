@@ -5,11 +5,17 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\Author;
+use App\Repository\AuthorRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthorController extends AbstractController
 {
     private $authors;
-    public function __construct(){
+    private $doctrine;
+    public function __construct(ManagerRegistry $doctrine){
+        $this->doctrine = $doctrine;
         $this->authors=[
             array('id' => 1, 'picture' => 'pictures/victor-hugo.jpg','username' => 'Victor Hugo', 'email' =>
             'victor.hugo@gmail.com ', 'nb_books' => 100),
@@ -18,6 +24,7 @@ class AuthorController extends AbstractController
             array('id' => 3, 'picture' => 'pictures/TahaHussein.jpg','username' => 'Taha Hussein', 'email' =>
             'taha.hussein@gmail.com', 'nb_books' => 300),
         ];
+
     }
 
     private function getAuthorById(int $id)
@@ -50,13 +57,114 @@ class AuthorController extends AbstractController
     }
 
     #[Route("/authors", name:"show.authors")]
-    public function listAuthors (): Response
+    public function listAuthors (AuthorRepository $authorRepository): Response
     {
-
-        return $this->render('author/show.html.twig', [
-            'authors'=>$this->authors
+        //$authorsdb = $this->doctrine->getRepository(Author::class)->findAll();
+        $authorsdb = $authorRepository->findAll();
+        return $this->render('author/showFromDB.html.twig', [
+            'authorsdb'=>$authorsdb
         ]);
     }
+
+    #[Route("/authors/{id}", name:"search.authors")]
+    public function searchAuthor (AuthorRepository $authorRepository, $id): Response
+    {
+        //$authorsdb = $this->doctrine->getRepository(Author::class)->findAll();
+        $author = $authorRepository->find($id);
+        return $this->render("author/showDetails.html.twig", array(
+            'author'=>$author
+        ));
+    }
+
+    #[Route("/authors/add", name:"author.add")]
+    public function addAuthor(Request $request): Response
+    {
+        $entityManager = $this->doctrine->getManager();
+        if($request->isMethod('POST')){
+            
+
+            $name = $request->request->get('name');
+            $email = $request->request->get('email');
+
+            $author = new Author();
+            //$author->setId(4);
+            $author->setUsername($name);
+            $author->setEmail($email);
+
+           
+            $entityManager->persist($author);
+            $entityManager->flush();
+
+            $this->addFlash("success", "L'autheur $name avec le email $email a été ajoutè");
+
+        }
+        
+
+        
+        return $this->render('author/ajoutAuthor.html.twig');
+    }
+
+
+    #[Route("/authors/update/{name}/{email}/{id}", name:"author.update")]
+    public function updateAuthor(Request $request, $name, $email, $id): Response
+    {
+        $entityManager = $this->doctrine->getManager();
+        if($request->isMethod('POST')){
+            $author = $entityManager->getRepository(Author::class)->find($id);
+
+            if (!$author) {
+                throw $this->createNotFoundException(
+                    'Aucun auteur trouvee avec l\'id ' . $id
+                );
+            }
+            $name = $request->request->get('name');
+            $email = $request->request->get('email');
+
+            $author->setUsername($name);
+            $author->setEmail($email);
+
+            $entityManager->persist($author);
+            $entityManager->flush();
+
+            $this->addFlash("success", "L'autheur $name avec le email $email a été modifié");
+
+        }
+        
+
+        
+        return $this->render('author/modifier.html.twig',
+        array(
+            'name'=>$name,
+            'email'=>$email,
+            'id'=>$id
+        ));
+    }
+
+    #[Route("/authors/delete/{id}", name:"author.delete")]
+    public function deleteAuthor(Request $request, $id): Response
+    {
+        $entityManager = $this->doctrine->getManager();
+        if($request){
+            $author = $entityManager->getRepository(Author::class)->find($id);
+
+            if (!$author) {
+                throw $this->createNotFoundException(
+                    'Aucun auteur trouvee avec l\'id ' . $id
+                );
+            }
+           
+
+            $entityManager->remove($author);
+            $entityManager->flush();
+
+            $this->addFlash("success", "L'autheur $id été supprimé");
+
+        }
+        
+        
+        return $this->forward('App\\Controller\\AuthorController::listAuthors');
+    }
+
 
 
     #[Route("/showDetails/{id}",name:"app_showDetail",methods:["GET"])]

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Details de l'auteur{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Liste Des Autheurs FROM DB</h1>
+  {% for message in app.flashes('success') %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+{% endfor %}
+    <div class="row">
+      {% for author in authorsdb %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ author.username }}</h5>
+              <p class="card-text"><strong>Email:</strong> {{ author.email }}</p>
+              <p class="card-text"><strong>ID:</strong> {{ author.id }}</p>
+
+              <a href="{{ path("app_showDetail",{'id':author.id}) }}">show_Details</a>
+
+              <a class="btn btn-primary" href="{{ path("author.update",{'name':author.username, 'email':author.email, 'id': author.id}) }}">modifier</a>
+
+              <a class="btn btn-warning" href="{{ path("author.delete",{'id': author.id}) }}">supprimer</a>
+
+
+            </div>
+          </div>
+        </div>
+        
+      {% endfor %}
+    </div>
+    
+{% endblock %}
