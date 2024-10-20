@@ -130,6 +130,7 @@ class AuthorController extends AbstractController
 
         }
         
+        
 
         
         return $this->render('author/modifier.html.twig',
@@ -180,4 +181,8 @@ class AuthorController extends AbstractController
                 'author'=>$author
             ));
     }
+
+
+
+   
 }

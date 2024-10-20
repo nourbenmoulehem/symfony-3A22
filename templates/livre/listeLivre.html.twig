@@ -1,0 +1,46 @@
+{# templates/livre/list.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}List of Livres{% endblock %}
+
+{% block content %}
+    <h1 class="text-center my-5">List des Livres</h1>
+
+    <div class="text-center mb-4">
+      <a href="{{ path('livre.ajouter') }}" class="btn btn-primary">
+        Ajouter un Livre
+      </a>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            {% for livre in livres %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">{{ livre.title }}</h5>
+                            <p class="card-text">
+                                <strong>Author:</strong> {{ livre.author.username }}<br>
+                                <strong>Reference:</strong> {{ livre.ref }}<br>
+                                <strong>Number of Pages:</strong> {{ livre.nbrPages }}
+                            </p>
+                            <a href="{{ path('livre.modify', {'id': livre.id } ) }}" class="btn btn-secondary">Modifier</a>
+
+                            <a href="{{ path('livre.delete', {'id': livre.id } ) }}" class="btn btn-danger">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center">No livres found.</p>
+            {% endfor %}
+        </div>
+
+        {% for message in app.session.flashBag.get('success') %}
+            <div class="alert alert-success" role="alert">
+            {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

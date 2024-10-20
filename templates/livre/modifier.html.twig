@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Details de l'auteur{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center my-5">Add New Livre</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="{{ path('livre.ajouter') }}" method='POST' class="form-horizontal">
+                    <div class="form-group">
+                        <label for="ref">Reference</label>
+                        <input type="number" class="form-control" id="ref" name="ref" value={{livre.ref}} required>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value={{livre.title}} required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <select class="form-control" id="author" name="author" value={{author.name}} required>
+                            <!-- Populate this with authors from your database -->
+                            <option value="Victor Hugo">Victor Hugo</option>
+                            <option value="William Shakespeare">William Shakespeare</option>
+                            <option value="Taha Hussein">Taha Hussein</option>
+                            <!-- Add more authors as needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nbrPages">Number of Pages</label>
+                        <input type="number" class="form-control" id="nbrPages" value={{livre.nbrPages}} name="nbrPages" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="picture">Picture (optional)</label>
+                        <input type="file" class="form-control" id="picture" name="picture">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Add Livre</button>
+                </form>
+            </div>
+        </div>
+
+       
+        {% for message in app.session.flashBag.get('error') %}
+            <div class="alert alert-danger" role="alert">
+            {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    
+{% endblock %}
