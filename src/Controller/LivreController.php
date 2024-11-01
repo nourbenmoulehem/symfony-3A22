@@ -18,11 +18,40 @@ use Psr\Log\LoggerInterface;
 #[Route('/livre')]
 final class LivreController extends AbstractController
 {
-    #[Route("/lists", name: 'livres.list', methods: ['GET'])]
-    public function listeLivre(LivreRepository $livreRepository): Response
+    #[Route("/lists", name: 'livres.list')]
+    public function listeLivre(Request $request, LivreRepository $livreRepository, LoggerInterface $logger): Response
     {
+        $livres = [];
+
+        if ($request->isMethod('POST')) {
+            $title = $request->request->get('title');
+            if ($title) {
+                $logger->info("HELLOOOOO");
+                $logger->info("TITLE: " . $title);
+
+                $livres = $livreRepository->findBy(['title' => $title]);
+
+                if (!empty($livres)) {
+                    $logger->info("LIVRES FOUND:");
+                    foreach ($livres as $index => $livre) {
+                        $logger->info("LIVRE " . $index . " : " . $livre->getTitle());
+                    }
+                } else {
+                    $this->addFlash('error', 'Book not found');
+                    $logger->info("NO LIVRES FOUND");
+                }
+                return $this->redirectToRoute('livres.list', ['title' => $title]);
+            }
+        }
+
+        $title = $request->query->get('title');
+        if ($title) {
+            $livres = $livreRepository->findBy(['title' => $title]);
+        } else {
+            $livres = $livreRepository->findAll();
+        }
         return $this->render('livre/listeLivre.html.twig', [
-            'livres' => $livreRepository->findAll(),
+            'livres' => $livres,
         ]);
     }
 
@@ -92,12 +121,12 @@ final class LivreController extends AbstractController
 
     #[Route('/modifier/{id}', name: 'livre.modify', methods: ['POST', 'GET'])]
     public function modify(Request $request, ManagerRegistry $doctrine, Livre $livre): Response
-    {   
+    {
         $form = $this->createForm(LivreType::class, $livre);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $doctrine->getManager();
             $em->flush();
 
@@ -157,9 +186,9 @@ final class LivreController extends AbstractController
 
     #[Route('/delete/{id}', name: 'livre.delete')]
     public function delete(Request $request, ManagerRegistry $doctrine, Livre $livre): Response
-    {   
+    {
 
-        if($livre) {
+        if ($livre) {
             $em = $doctrine->getManager();
             $em->remove($livre);
             $em->flush();

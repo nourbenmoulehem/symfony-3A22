@@ -52,4 +52,23 @@ class AuthorRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAuthorsByEmail($value): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT a FROM App\Entity\Author a WHERE a.email LIKE :email')->setParameter('email', '%'.$value.'%');
+        return $query->getResult();
+    }
+
+    public function findAuthorsByUsername($value): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.username = :val')
+            ->setParameter('val', $value)
+            ->orderBy('a.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

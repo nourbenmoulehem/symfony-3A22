@@ -57,10 +57,37 @@ class AuthorController extends AbstractController
     }
 
     #[Route("/authors", name:"show.authors")]
-    public function listAuthors (AuthorRepository $authorRepository): Response
+    public function listAuthors (AuthorRepository $authorRepository, Request $request): Response
     {
+        $authorsdb = [];
+
+        if($request->isMethod('POST')){
+
+            $email = $request->request->get('email');
+
+            $authorsdb = $authorRepository->findAuthorsByEmail($email);
+            if (!empty($authorsdb)) {
+                $this->addFlash('success', 'Author found');
+            } else {
+                $this->addFlash('error', 'Author not found');
+            }
+            return $this->redirectToRoute('show.authors', [
+                'email'=>$email
+            ]);
+        }   
         //$authorsdb = $this->doctrine->getRepository(Author::class)->findAll();
-        $authorsdb = $authorRepository->findAll();
+        $email = $request->query->get('email');
+        if ($email) {
+            $authorsdb = $authorRepository->findAuthorsByEmail($email);
+            if (!empty($authorsdb)) {
+                $this->addFlash('success', 'Author found');
+            } else {
+                $this->addFlash('error', 'Author not found');
+            }
+        } else {
+            $authorsdb = $authorRepository->findAll();
+        }
+       
         return $this->render('author/showFromDB.html.twig', [
             'authorsdb'=>$authorsdb
         ]);

@@ -9,6 +9,14 @@
         {{ message }}
     </div>
 {% endfor %}
+
+  <div>
+    <form action="{{path("show.authors")}}" class="form-control" method="POST">
+      <label for="email">Search by email</label>
+      <input type="text" name="email" id="email">
+      <button type="submit" class="btn btn-danger" >Submit </button>
+    </form>
+  </div>
     <div class="row">
       {% for author in authorsdb %}
         <div class="col-md-4 mb-4">
@@ -28,7 +36,10 @@
             </div>
           </div>
         </div>
-        
+        {% else %}
+                <div class="alert alert-danger" role="alert">
+                No Authors found
+              </div>
       {% endfor %}
     </div>
     

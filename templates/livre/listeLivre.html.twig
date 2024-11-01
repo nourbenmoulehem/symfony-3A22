@@ -13,7 +13,18 @@
       </a>
     </div>
 
+
+
     <div class="container">
+        <div class="mb-4">
+            <form action="{{path('livres.list')}}" method="POST">
+                <label for="title"> search by title</label>
+                <input type="text" id="title" name="title" placeholder="Search" class="form-control mb-2">
+                <button type="submit" class="btn btn-warning">Submit 👀</button>
+            </form>
+            
+        </div>
+        <a href="{{path('livres.list')}}" class="btn btn-light mb-5">Reset 🔮 </a>
         <div class="row">
             {% for livre in livres %}
                 <div class="col-md-4 mb-4">
@@ -39,6 +50,12 @@
 
         {% for message in app.session.flashBag.get('success') %}
             <div class="alert alert-success" role="alert">
+            {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.session.flashBag.get('error') %}
+            <div class="alert alert-danger" role="alert">
             {{ message }}
             </div>
         {% endfor %}
